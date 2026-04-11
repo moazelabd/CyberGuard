@@ -1,0 +1,30 @@
+# Build folders
+/build/
+/cmake-build-*/
+x64/
+Debug/
+Release/
+
+# Generated files
+*.o
+*.obj
+*.exe
+*.out
+
+# SQLite database (ignore all)
+*.db
+
+
+# Editor configs
+.idea/
+.vscode/
+
+# CMake files
+CMakeFiles/
+CMakeCache.txt
+cmake_install.cmake
+Makefile
+
+# Visual Studio
+.vs/
+*.vcxproj.user

@@ -1,0 +1,7 @@
+<Solution>
+  <Configurations>
+    <Platform Name="x64" />
+    <Platform Name="x86" />
+  </Configurations>
+  <Project Path="CyberGuard/CyberGuard.vcxproj" Id="4e05b93b-3236-4bc2-9f53-ec38e91ba325" />
+</Solution>
