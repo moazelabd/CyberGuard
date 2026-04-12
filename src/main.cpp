@@ -1,6 +1,8 @@
 #include "../include/Database.h"
 #include "../include/User.h"
 #include "../include/Vault.h"
+#include "../include/Utils.h"
+
 #include <iostream>
 #include <string>
 
@@ -51,7 +53,9 @@ int main() {
         std::cout << "2. View All Passwords\n";
         std::cout << "3. Search Password by Title\n";
         std::cout << "4. Remove Password by Title\n";
-        std::cout << "5. Exit\n";
+        std::cout << "5. Update Password by Title\n";
+        std::cout << "6. Generate Strong Password\n";
+        std::cout << "7. Exit\n";
         std::cout << "Enter choice: ";
         std::cin >> choice;
         std::cin.ignore();
@@ -61,17 +65,19 @@ int main() {
             std::cout << "Title: ";
             std::getline(std::cin, title);
 
-            std::cout << "Created At: ";
-            std::getline(std::cin, createdAt);
-
             std::cout << "Username: ";
             std::getline(std::cin, username);
 
             std::cout << "Password: ";
             std::getline(std::cin, entryPassword);
 
+            std::cout << "Password Strength: "
+                << Utils::checkPasswordStrength(entryPassword) << "\n";
+
             std::cout << "Website URL: ";
             std::getline(std::cin, websiteUrl);
+
+            createdAt = Utils::getCurrentDate();
 
             if (vault.addPassword(title, createdAt, username, entryPassword, websiteUrl)) {
                 std::cout << "Password entry added successfully.\n";
@@ -104,6 +110,29 @@ int main() {
             break;
 
         case 5:
+            std::cout << "Enter title to update: ";
+            std::getline(std::cin, title);
+
+            std::cout << "Enter new password: ";
+            std::getline(std::cin, entryPassword);
+
+            std::cout << "Password Strength: "
+                << Utils::checkPasswordStrength(entryPassword) << "\n";
+
+            if (vault.updatePasswordByTitle(title, entryPassword)) {
+                std::cout << "Password updated successfully.\n";
+            }
+            else {
+                std::cout << "Failed to update password.\n";
+            }
+            break;
+
+        case 6:
+            std::cout << "Generated Password: "
+                << Utils::generatePassword(12) << "\n";
+            break;
+
+        case 7:
             std::cout << "Goodbye.\n";
             break;
 
@@ -111,7 +140,7 @@ int main() {
             std::cout << "Invalid choice.\n";
         }
 
-    } while (choice != 5);
+    } while (choice != 7);
 
     return 0;
 }

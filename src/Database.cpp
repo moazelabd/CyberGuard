@@ -1,5 +1,6 @@
 #include "../include/Database.h"
 #include "../third_party/sqlite/sqlite3.h"
+#include "../include/Utils.h"
 #include <iostream>
 
 Database::Database(const std::string& path)
@@ -192,11 +193,25 @@ void Database::viewAllPasswordEntries() const {
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         std::cout << "ID: " << sqlite3_column_int(stmt, 0) << "\n";
-        std::cout << "Title: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)) << "\n";
-        std::cout << "Created At: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)) << "\n";
-        std::cout << "Username: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)) << "\n";
-        std::cout << "Password: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4)) << "\n";
-        std::cout << "Website: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
+
+        std::cout << "Title: "
+            << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)) << "\n";
+
+        std::cout << "Created At: "
+            << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)) << "\n";
+
+        std::cout << "Username: "
+            << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)) << "\n";
+
+        const unsigned char* raw = sqlite3_column_text(stmt, 4);
+        std::string encryptedPassword = raw ? reinterpret_cast<const char*>(raw) : "";
+        std::string decryptedPassword = Utils::xorEncryptDecrypt(encryptedPassword);
+
+        std::cout << "Password: " << decryptedPassword << "\n";
+
+        std::cout << "Website: "
+            << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
+
         std::cout << "-----------------------------\n";
     }
 
@@ -226,8 +241,9 @@ void Database::searchPasswordEntryByTitle(const std::string& title) const {
         std::cout << "Title: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)) << "\n";
         std::cout << "Created At: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)) << "\n";
         std::cout << "Username: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)) << "\n";
-        std::cout << "Password: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4)) << "\n";
-        std::cout << "Website: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
+        std::string encryptedPassword = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+        std::string decryptedPassword = Utils::xorEncryptDecrypt(encryptedPassword);
+        std::cout << "Password: " << decryptedPassword << "\n";        std::cout << "Website: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
     }
 
     if (!found) {
@@ -235,4 +251,29 @@ void Database::searchPasswordEntryByTitle(const std::string& title) const {
     }
 
     sqlite3_finalize(stmt);
+}
+bool Database::updatePasswordByTitle(const std::string& title, const std::string& newEncryptedPassword) {
+    const char* sql =
+        "UPDATE password_entries "
+        "SET encrypted_password = ? "
+        "WHERE title = ?;";
+
+    sqlite3_stmt* stmt = nullptr;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK) {
+        std::cout << "Failed to prepare update query.\n";
+        return false;
+    }
+
+    sqlite3_bind_text(stmt, 1, newEncryptedPassword.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_text(stmt, 2, title.c_str(), -1, SQLITE_TRANSIENT);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    if (!success) {
+        std::cout << "Failed to update password.\n";
+    }
+
+    sqlite3_finalize(stmt);
+    return success;
 }

@@ -32,6 +32,7 @@ public:
     bool deletePasswordEntryByTitle(const std::string& title);
     void viewAllPasswordEntries() const;
     void searchPasswordEntryByTitle(const std::string& title) const;
+    bool updatePasswordByTitle(const std::string& title, const std::string& newEncryptedPassword);
 
 private:
     bool createTables();

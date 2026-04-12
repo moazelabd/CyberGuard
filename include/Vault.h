@@ -18,8 +18,9 @@ public:
         const std::string& password,
         const std::string& websiteUrl
     );
-
+    bool updatePasswordByTitle(const std::string& title, const std::string& newPassword);
     void viewAllPasswords() const;
     void searchPasswordByTitle(const std::string& title) const;
     bool removePasswordByTitle(const std::string& title);
+
 };
