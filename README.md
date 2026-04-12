@@ -86,7 +86,7 @@ The project follows a modular OOP design:
 ### Steps
 
 ```bash
-git clone https://github.com/USERNAME/CyberGuard.git
+git clone https://github.com/moazelabd/CyberGuard.git
 cd CyberGuard
 ```
 
