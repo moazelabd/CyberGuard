@@ -1,167 +1,137 @@
-# 🔐 CyberGuard - Password & Secret Manager (CLI)
+# 🔐 CyberGuard - CLI Password & Secret Manager
 
-CyberGuard is a lightweight and secure command-line application for managing passwords and sensitive information using modern **C++ OOP principles** and **SQLite**.
-
----
-
-## 🚀 Features
-
-* 🔑 Master Password Authentication
-* 🔒 Secure Storage of Passwords
-* 🧠 Clean Object-Oriented Design
-* 📂 SQLite Database (No setup required)
-* 🔍 Search Secrets by Title
-* 🗑️ Delete Stored Entries
-* 📋 View All Stored Secrets
+CyberGuard is a lightweight command-line application designed to securely manage passwords and sensitive information. The project is implemented in **C++** using **Object-Oriented Programming (OOP)** principles and integrates with an **SQLite** database for persistent storage.
 
 ---
 
-## 🧱 Project Structure
+## 🚀 Overview
 
-```
-CyberGuard/
-│
-├── include/        # Header files (.h)
-├── src/            # Source files (.cpp)
-├── db/             # SQLite database file
-├── third_party/    # External libraries (SQLite)
-│
-├── CMakeLists.txt
-├── README.md
-```
+CyberGuard provides a simple and secure way to store and manage credentials through a console-based interface. The system uses a **master password authentication mechanism** to protect access to all stored data.
 
 ---
 
-## 🧠 OOP Concepts Used
+## ✨ Features
 
-* **Encapsulation** → Sensitive data (passwords) are private
-* **Inheritance** → `PasswordEntry` inherits from `Secret`
-* **Polymorphism** → Virtual methods like `viewDetails()`
-* **Abstraction** → Base class `Secret`
+* 🔑 **Master Password Authentication**
+
+  * First-time setup and secure login system
+
+* 🔒 **Password Storage**
+
+  * Store credentials including title, username, password, and website
+
+* 🔍 **Search Functionality**
+
+  * Retrieve stored entries by title
+
+* 🗑️ **Delete Entries**
+
+  * Remove stored credentials from the database
+
+* 📋 **View All Entries**
+
+  * Display all stored passwords
+
+* ✏️ **Update Password**
+
+  * Modify an existing password entry
+
+* 🔐 **Basic Encryption**
+
+  * Passwords are stored using a simple XOR-based encryption (for educational purposes)
+
+* 📅 **Automatic Timestamp**
+
+  * Entries are saved with creation date automatically
+
+* 🧠 **Password Strength Indicator**
+
+  * Evaluates password strength (Weak / Medium / Strong)
+
+* 🎲 **Password Generator**
+
+  * Generates random strong passwords
+
+---
+
+## 🧱 Architecture
+
+The project follows a modular OOP design:
+
+* **User** → Handles authentication and master password logic
+* **Vault** → Manages high-level operations (add, search, update, delete)
+* **Database** → Handles all SQLite operations
+* **Secret (Base Class)** → Abstract representation of stored data
+* **PasswordEntry** → Derived class representing password records
+* **Utils** → Helper functions (encryption, date, validation, generation)
 
 ---
 
 ## 💾 Database
 
 * Uses **SQLite (embedded database)**
-
-* Database file:
-
-  ```
-  db/cyberguard.db
-  ```
-
-* Automatically created on first run
-
 * No installation or configuration required
-
----
-
-## 🛠️ Requirements
-
-* C++17 or later
-* Visual Studio / VS Code
-* CMake (optional but recommended)
+* Automatically initializes on first run
+* Data is stored in a local `.db` file
 
 ---
 
 ## ⚙️ Build & Run
 
-### ▶️ Using Visual Studio
+### Requirements
 
-1. Open solution file:
+* C++17 or later
+* Visual Studio (or any C++ compiler)
 
-   ```
-   CyberGuard.slnx
-   ```
-2. Build the project
-3. Run the program
-
----
-
-### ▶️ Using CMake (optional)
+### Steps
 
 ```bash
-mkdir build
-cd build
-cmake ..
-cmake --build .
+git clone https://github.com/USERNAME/CyberGuard.git
+cd CyberGuard
+```
+
+Build and run using your preferred IDE (Visual Studio recommended).
+
+---
+
+## 🔐 Security Note
+
+This project uses a **basic XOR encryption** mechanism for demonstration and educational purposes only.
+
+> ⚠️ Not suitable for production-level security.
+
+---
+
+## 📁 Project Structure
+
+```
+CyberGuard/
+├── include/        # Header files
+├── src/            # Source files
+├── third_party/    # SQLite library
+├── db/             # Database file (ignored in Git)
 ```
 
 ---
 
-## 🔐 First Run
+## 📌 Notes
 
-* On first launch:
-
-  * You will be asked to set a **Master Password**
-* This password is required to access the vault
-
----
-
-## 📌 Usage
-
-Main Menu:
-
-```
-1. Add Password Entry
-2. View All Secrets
-3. Search by Title
-4. Remove Secret
-5. Exit
-```
-
----
-
-## ⚠️ Security Note
-
-This project uses **basic encryption for educational purposes**.
-
-For production-level security:
-
-* Use strong encryption libraries (e.g., OpenSSL)
-* Implement hashing (e.g., bcrypt, SHA-256)
-
----
-
-## 📦 Distribution
-
-CyberGuard is designed to be:
-
-* ✅ Portable
-* ✅ Easy to use
-* ✅ No database setup required
-
-Simply share:
-
-```
-CyberGuard.exe + db folder
-```
+* The database file is excluded from version control using `.gitignore`
+* All data is generated locally during runtime
+* No external dependencies or servers are required
 
 ---
 
 ## 👨‍💻 Author
 
-Developed by a CIE student focused on:
+Developed as a systems programming and OOP project focusing on:
 
-* Systems Programming
-* Cybersecurity Concepts
-* Clean Software Architecture
-
----
-
-## ⭐ Future Improvements
-
-* AES Encryption
-* GUI Version
-* Auto password generator
-* File encryption support
+* Clean architecture
+* Database integration
+* Security fundamentals
 
 ---
 
 ## 📄 License
 
-This project is for educational and personal use.
-Feel free to modify and extend.
-
----
+This project is intended for educational and personal use.
