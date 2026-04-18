@@ -5,6 +5,7 @@
 
 #include <iostream>
 #include <string>
+#include <limits>
 
 int main() {
     Database db;
@@ -57,22 +58,47 @@ int main() {
         std::cout << "6. Generate Strong Password\n";
         std::cout << "7. Exit\n";
         std::cout << "Enter choice: ";
-        std::cin >> choice;
-        std::cin.ignore();
+        if (!(std::cin >> choice)) {
+            std::cin.clear();
+            std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+            std::cout << "Invalid input. Please enter a number.\n";
+            continue;
+        }
+        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
         switch (choice) {
         case 1:
             std::cout << "Title: ";
             std::getline(std::cin, title);
 
+            if (Utils::isEmpty(title)) {
+                std::cout << "Title cannot be empty.\n";
+                break;
+            }
+
             std::cout << "Username: ";
             std::getline(std::cin, username);
+
+            if (Utils::isEmpty(username)) {
+                std::cout << "Username cannot be empty.\n";
+                break;
+            }
 
             std::cout << "Password: ";
             std::getline(std::cin, entryPassword);
 
+            if (Utils::isEmpty(entryPassword)) {
+                std::cout << "Password cannot be empty.\n";
+                break;
+            }
+
             std::cout << "Password Strength: "
                 << Utils::checkPasswordStrength(entryPassword) << "\n";
+
+            if (!Utils::isStrongEnough(entryPassword)) {
+                std::cout << "Password is too weak. Please choose a stronger password.\n";
+                break;
+            }
 
             std::cout << "Website URL: ";
             std::getline(std::cin, websiteUrl);
@@ -101,23 +127,49 @@ int main() {
             std::cout << "Enter title to remove: ";
             std::getline(std::cin, title);
 
-            if (vault.removePasswordByTitle(title)) {
-                std::cout << "Password entry removed.\n";
+            char confirm;
+            std::cout << "Are you sure you want to delete this entry? (y/n): ";
+            std::cin >> confirm;
+            std::cin.ignore();
+
+            if (confirm == 'y' || confirm == 'Y') {
+                if (vault.removePasswordByTitle(title)) {
+                    std::cout << "Password entry removed.\n";
+                }
+                else {
+                    std::cout << "Failed to remove password entry.\n";
+                }
             }
             else {
-                std::cout << "Failed to remove password entry.\n";
+                std::cout << "Deletion cancelled.\n";
             }
+
             break;
 
         case 5:
             std::cout << "Enter title to update: ";
             std::getline(std::cin, title);
 
+            if (Utils::isEmpty(title)) {
+                std::cout << "Title cannot be empty.\n";
+                break;
+            }
+
             std::cout << "Enter new password: ";
             std::getline(std::cin, entryPassword);
 
+            if (Utils::isEmpty(entryPassword)) {
+                std::cout << "Password cannot be empty.\n";
+                break;
+            }
+
             std::cout << "Password Strength: "
                 << Utils::checkPasswordStrength(entryPassword) << "\n";
+
+            if (!Utils::isStrongEnough(entryPassword)) {
+                std::cout << "Password is too weak. Please choose a stronger password.\n";
+                break;
+            }
 
             if (vault.updatePasswordByTitle(title, entryPassword)) {
                 std::cout << "Password updated successfully.\n";

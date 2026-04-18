@@ -178,6 +178,7 @@ bool Database::deletePasswordEntryByTitle(const std::string& title) {
 }
 
 void Database::viewAllPasswordEntries() const {
+    bool hasData = false;
     const char* sql =
         "SELECT id, title, created_at, username, encrypted_password, website_url "
         "FROM password_entries;";
@@ -192,6 +193,7 @@ void Database::viewAllPasswordEntries() const {
     std::cout << "\n=== All Password Entries ===\n";
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
+        hasData = true;
         std::cout << "ID: " << sqlite3_column_int(stmt, 0) << "\n";
 
         std::cout << "Title: "
@@ -207,14 +209,28 @@ void Database::viewAllPasswordEntries() const {
         std::string encryptedPassword = raw ? reinterpret_cast<const char*>(raw) : "";
         std::string decryptedPassword = Utils::xorEncryptDecrypt(encryptedPassword);
 
-        std::cout << "Password: " << decryptedPassword << "\n";
+        // Hide password
+        std::string hidden(decryptedPassword.length(), '*');
+        std::cout << "Password: " << hidden << "\n";
+
+        // Ask user if they want to reveal
+        char show;
+        std::cout << "Show password? (y/n): ";
+        std::cin >> show;
+        std::cin.ignore();
+
+        if (show == 'y' || show == 'Y') {
+            std::cout << "Actual Password: " << decryptedPassword << "\n";
+        }
 
         std::cout << "Website: "
             << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
 
         std::cout << "-----------------------------\n";
     }
-
+    if (hasData==false) {
+        std::cout << "No password entries found.\n";
+    }
     sqlite3_finalize(stmt);
 }
 
@@ -236,14 +252,31 @@ void Database::searchPasswordEntryByTitle(const std::string& title) const {
 
     while (sqlite3_step(stmt) == SQLITE_ROW) {
         found = true;
+
         std::cout << "\n=== Search Result ===\n";
         std::cout << "ID: " << sqlite3_column_int(stmt, 0) << "\n";
         std::cout << "Title: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 1)) << "\n";
         std::cout << "Created At: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 2)) << "\n";
         std::cout << "Username: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 3)) << "\n";
-        std::string encryptedPassword = reinterpret_cast<const char*>(sqlite3_column_text(stmt, 4));
+
+        const unsigned char* raw = sqlite3_column_text(stmt, 4);
+        std::string encryptedPassword = raw ? reinterpret_cast<const char*>(raw) : "";
         std::string decryptedPassword = Utils::xorEncryptDecrypt(encryptedPassword);
-        std::cout << "Password: " << decryptedPassword << "\n";        std::cout << "Website: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
+
+        std::string hidden(decryptedPassword.length(), '*');
+        std::cout << "Password: " << hidden << "\n";
+
+        char show;
+        std::cout << "Show password? (y/n): ";
+        std::cin >> show;
+        std::cin.ignore();
+
+        if (show == 'y' || show == 'Y') {
+            std::cout << "Actual Password: " << decryptedPassword << "\n";
+        }
+
+        std::cout << "Website: " << reinterpret_cast<const char*>(sqlite3_column_text(stmt, 5)) << "\n";
+        std::cout << "-----------------------------\n";
     }
 
     if (!found) {

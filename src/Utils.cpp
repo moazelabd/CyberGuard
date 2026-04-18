@@ -9,11 +9,9 @@ namespace Utils {
 
     std::string xorEncryptDecrypt(const std::string& text, char key) {
         std::string result = text;
-
         for (char& ch : result) {
             ch ^= key;
         }
-
         return result;
     }
 
@@ -58,18 +56,10 @@ namespace Utils {
         bool hasSpecial = false;
 
         for (char ch : password) {
-            if (std::isupper(static_cast<unsigned char>(ch))) {
-                hasUpper = true;
-            }
-            else if (std::islower(static_cast<unsigned char>(ch))) {
-                hasLower = true;
-            }
-            else if (std::isdigit(static_cast<unsigned char>(ch))) {
-                hasDigit = true;
-            }
-            else {
-                hasSpecial = true;
-            }
+            if (std::isupper(static_cast<unsigned char>(ch))) hasUpper = true;
+            else if (std::islower(static_cast<unsigned char>(ch))) hasLower = true;
+            else if (std::isdigit(static_cast<unsigned char>(ch))) hasDigit = true;
+            else hasSpecial = true;
         }
 
         int score = 0;
@@ -82,6 +72,14 @@ namespace Utils {
         if (score <= 2) return "Weak";
         if (score <= 4) return "Medium";
         return "Strong";
+    }
+
+    bool isEmpty(const std::string& text) {
+        return text.empty();
+    }
+
+    bool isStrongEnough(const std::string& password) {
+        return checkPasswordStrength(password) != "Weak";
     }
 
 }
