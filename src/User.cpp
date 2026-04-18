@@ -1,5 +1,6 @@
 #include "../include/User.h"
 #include "../include/Database.h"
+#include "../include/Utils.h"
 
 User::User(Database& db) : database(db) {}
 
@@ -8,9 +9,11 @@ bool User::isFirstRun() {
 }
 
 bool User::setupMasterPassword(const std::string& password) {
-    return database.saveMasterPassword(password);
+    std::string hashedPassword = Utils::hashString(password);
+    return database.saveMasterPassword(hashedPassword);
 }
 
 bool User::login(const std::string& inputPassword) {
-    return inputPassword == database.getMasterPassword();
+    std::string hashedInput = Utils::hashString(inputPassword);
+    return hashedInput == database.getMasterPassword();
 }

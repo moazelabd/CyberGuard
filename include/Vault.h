@@ -23,4 +23,7 @@ public:
     void searchPasswordByTitle(const std::string& title) const;
     bool removePasswordByTitle(const std::string& title);
 
+    bool updatePasswordById(int id, const std::string& password);
+	bool removePasswordById(int id);
+    
 };

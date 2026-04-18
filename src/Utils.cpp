@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <random>
 #include <sstream>
+#include <functional>
 
 namespace Utils {
 
@@ -81,5 +82,8 @@ namespace Utils {
     bool isStrongEnough(const std::string& password) {
         return checkPasswordStrength(password) != "Weak";
     }
-
+    std::string hashString(const std::string& text) {
+        std::hash<std::string> hasher;
+        return std::to_string(hasher(text));
+    }
 }

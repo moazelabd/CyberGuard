@@ -34,6 +34,9 @@ public:
     void searchPasswordEntryByTitle(const std::string& title) const;
     bool updatePasswordByTitle(const std::string& title, const std::string& newEncryptedPassword);
 
+    bool deletePasswordById(int id);
+    bool updatePasswordById(int id, const std::string& newPassword);
+
 private:
     bool createTables();
     bool execute(const std::string& sql);

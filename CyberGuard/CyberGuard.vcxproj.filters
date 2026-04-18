@@ -61,7 +61,6 @@
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
-    <None Include="cyberguard.db" />
     <None Include="..\.gitignore" />
   </ItemGroup>
 </Project>

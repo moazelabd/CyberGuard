@@ -215,7 +215,7 @@ void Database::viewAllPasswordEntries() const {
 
         // Ask user if they want to reveal
         char show;
-        std::cout << "Show password? (y/n): ";
+        std::cout << "display hidden? (y/n): ";
         std::cin >> show;
         std::cin.ignore();
 
@@ -306,6 +306,37 @@ bool Database::updatePasswordByTitle(const std::string& title, const std::string
     if (!success) {
         std::cout << "Failed to update password.\n";
     }
+
+    sqlite3_finalize(stmt);
+    return success;
+}
+bool Database::deletePasswordById(int id) {
+    const char* sql = "DELETE FROM password_entries WHERE id = ?;";
+    sqlite3_stmt* stmt = nullptr;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_int(stmt, 1, id);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
+
+    sqlite3_finalize(stmt);
+    return success;
+}
+bool Database::updatePasswordById(int id, const std::string& newPassword) {
+    std::string encrypted = Utils::xorEncryptDecrypt(newPassword);
+
+    const char* sql = "UPDATE password_entries SET encrypted_password = ? WHERE id = ?;";
+    sqlite3_stmt* stmt = nullptr;
+
+    if (sqlite3_prepare_v2(db, sql, -1, &stmt, nullptr) != SQLITE_OK)
+        return false;
+
+    sqlite3_bind_text(stmt, 1, encrypted.c_str(), -1, SQLITE_TRANSIENT);
+    sqlite3_bind_int(stmt, 2, id);
+
+    bool success = (sqlite3_step(stmt) == SQLITE_DONE);
 
     sqlite3_finalize(stmt);
     return success;

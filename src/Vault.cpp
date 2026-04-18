@@ -30,3 +30,10 @@ bool Vault::updatePasswordByTitle(const std::string& title, const std::string& n
     std::string encryptedPassword = Utils::xorEncryptDecrypt(newPassword);
     return database.updatePasswordByTitle(title, encryptedPassword);
 }
+bool Vault::removePasswordById(int id) {
+    return database.deletePasswordById(id);
+}
+
+bool Vault::updatePasswordById(int id, const std::string& password) {
+    return database.updatePasswordById(id, password);
+}
